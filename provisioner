@@ -44,3 +44,8 @@ populate_db() {
     /tmp/populate_db 10000000| mysql -u root samtt
 }
 populate_db
+
+createIndex() {
+    echo 'CREATE INDEX `idx_created` ON `mo` (`created_at` ASC)'| mysql -u root samtt
+}
+createIndex
