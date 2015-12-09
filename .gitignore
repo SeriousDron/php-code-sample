@@ -1,3 +1,5 @@
 .vagrant
 /registermo
 git-export-dir/
+code/vendor/
+code/server/node_modules/
