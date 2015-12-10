@@ -3,14 +3,17 @@
 namespace Smtt\Controller;
 
 use Smtt\Exception\Exception;
-use Smtt\RegisterMoInterface;
+use Smtt\RegisterMo\RegisterMoInterface;
 use Smtt\RequestProcessor;
+use Smtt\Traits\Logger;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class Register
 {
+    use Logger;
+
     /** @var RegisterMoInterface */
     protected $registerMo;
 
@@ -28,22 +31,29 @@ class Register
     }
 
     /**
-     * Action processing all mo requests
+     * Action processing mo requests
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request)
+    public function __invoke(Request $request)
     {
         $response = new JsonResponse();
         try {
             $moRequest = $this->requestProcessor->process($request);
             $this->registerMo->register($moRequest);
+            $response->setData(['status' => 'ok']);
         } catch (Exception $e) {
             $response->setStatusCode($e->getCode());
             $response->setData([
                 'status'    => 'error',
                 'message'   => $e->getMessage(),
             ]);
+        } catch (\Exception $e) { //Unexpected exception
+            $this->logger->error('Unexpected exception caught', [
+                'exception' => $e->__toString(),
+            ]);
+            $response->setStatusCode(500);
         }
+        return $response;
     }
 }

@@ -8,7 +8,7 @@ installpkg(){
 apt-get update
 installpkg php5
 installpkg php5-mysql
-installpkg redis-server
+installpkg php5-mysql
 installpkg mysql-server
 installpkg apache2-utils
 installpkg apache2-suexec-custom
@@ -19,6 +19,11 @@ a2dissite 000-default.conf
 cp /tmp/001-talented.conf /etc/apache2/sites-available
 a2ensite  001-talented.conf
 service apache2 restart
+
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
+cd code
+composer.phar install
+composer.phar dumpautoload -o
 
 bootstrapdb(){
     cat <<EOF | mysql -uroot
@@ -49,3 +54,5 @@ createIndex() {
     echo 'CREATE INDEX `idx_created` ON `mo` (`created_at` ASC)'| mysql -u root samtt
 }
 createIndex
+
+#warmup caches
