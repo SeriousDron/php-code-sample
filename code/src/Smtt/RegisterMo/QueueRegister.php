@@ -6,7 +6,6 @@ use Smtt\dto\MoRequest;
 
 class QueueRegister implements RegisterMoInterface
 {
-
     /**
      * @param MoRequest $moRequest
      * @return mixed

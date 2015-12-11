@@ -2,7 +2,6 @@
 
 namespace Smtt\Controller;
 
-use Smtt\Exception\Exception;
 use Smtt\RegisterMo\RegisterMoInterface;
 use Smtt\RequestProcessor;
 use Smtt\Traits\Logger;
@@ -42,7 +41,7 @@ class Register
             $moRequest = $this->requestProcessor->process($request);
             $this->registerMo->register($moRequest);
             $response->setData(['status' => 'ok']);
-        } catch (Exception $e) {
+        } catch (\Smtt\Exception\Exception $e) {
             $response->setStatusCode($e->getCode());
             $response->setData([
                 'status'    => 'error',

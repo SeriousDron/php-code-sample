@@ -8,7 +8,7 @@ interface RegisterMoInterface
 {
     /**
      * @param MoRequest $moRequest
-     * @return mixed
+     * @return boolean
      */
     public function register(MoRequest $moRequest);
 }
