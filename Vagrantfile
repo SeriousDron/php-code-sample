@@ -13,13 +13,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.vm.network "public_network"
   config.ssh.forward_agent = true
   config.vm.synced_folder "./code", "/home/vagrant/code"
-  # config.vm.provider "virtualbox" do |vb|
+  config.vm.provider "virtualbox" do |vb|
   #   # Don't boot with headless mode
   #   vb.gui = true
   #
   #   # Use VBoxManage to customize the VM. For example to change memory:
-  #   vb.customize ["modifyvm", :id, "--memory", "1024"]
-  # end
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+  end
   config.vm.provision "file", source: "001-talented.conf", destination: "/tmp/001-talented.conf"
   config.vm.provision "file", source: "populate_db", destination: "/tmp/populate_db"
   config.vm.provision "shell", path: "./provisioner"

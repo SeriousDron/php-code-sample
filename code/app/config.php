@@ -9,6 +9,13 @@ return [
 
     'db.connection_url' => 'mysql::root@localhost:3306/samtt?charset=UTF-8',
 
+    'queue.server'  => '127.0.0.1',
+    'queue.port'    => 4730,
+    'queue.name'    => 'smtt_register_mo',
+
+    \Smtt\Queue\QueueInterface::class => \DI\object(\Smtt\Queue\GearmanQueue::class)
+        ->method('addServer', \DI\get('queue.server'), \DI\get('queue.port')),
+
     Doctrine\DBAL\Connection::class => \DI\factory(function(\Interop\Container\ContainerInterface $container) {
         $connectionParams = array(
             'url' => $container->get('db.connection_url'),

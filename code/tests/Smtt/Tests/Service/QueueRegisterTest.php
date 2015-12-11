@@ -16,7 +16,7 @@ class QueueRegisterTest extends \PHPUnit_Framework_TestCase
             . 's:10:"operatorid";i:3;s:11:"shortcodeid";i:8;s:4:"text";s:8:"ON GAMES";}');
 
         $queue = $this->getMockBuilder(GearmanQueue::class)->disableOriginalConstructor()->getMock();
-        $queue->expects($this->once())->method('rpc')->with('test_queue', json_encode($moRequest))->willReturn('true');
+        $queue->expects($this->once())->method('rpc')->with('test_queue', $moRequest)->willReturn('true');
 
         $queueRegister = new QueueRegister($queue);
         $queueRegister->setQueue('test_queue');

@@ -6,9 +6,11 @@ installpkg(){
 }
 
 apt-get update
+installpkg gearman-job-server
 installpkg php5
+installpkg php5-apcu
 installpkg php5-mysql
-installpkg php5-mysql
+installpkg php5-gearman
 installpkg mysql-server
 installpkg apache2-utils
 installpkg apache2-suexec-custom
@@ -22,7 +24,7 @@ service apache2 restart
 
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 cd code
-composer.phar install
+composer.phar --no-dev install
 composer.phar dumpautoload -o
 
 bootstrapdb(){

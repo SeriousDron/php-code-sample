@@ -42,7 +42,7 @@ class QueueRegister implements RegisterMoInterface
     public function register(MoRequest $moRequest)
     {
         try {
-            $jsonResult = $this->queueServer->rpc($this->queue, json_encode($moRequest));
+            $jsonResult = $this->queueServer->rpc($this->queue, $moRequest);
             $result = json_decode($jsonResult);
             if (!is_bool($result)) {
                 throw new ProcessingException('Unexpected result type');
