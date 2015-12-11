@@ -4,7 +4,7 @@ namespace Smtt\Tests\Controller;
 
 use Monolog\Logger;
 use Smtt\Controller\Register;
-use Smtt\RegisterMo\InstantRegister;
+use Smtt\Service\InstantRegister;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

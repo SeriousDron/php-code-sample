@@ -1,4 +1,5 @@
 <?php
+chdir(__DIR__.'/../');
 
 use DI\ContainerBuilder;
 

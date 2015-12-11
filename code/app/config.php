@@ -16,7 +16,7 @@ return [
         return \Doctrine\DBAL\DriverManager::getConnection($connectionParams);
     }),
 
-    Smtt\RegisterMo\RegisterMoInterface::class => \DI\object(Smtt\RegisterMo\QueueRegister::class),
+    Smtt\Service\RegisterMoInterface::class => \DI\object(Smtt\Service\QueueRegister::class),
 
     LoggerInterface::class => DI\object(Logger::class)
         ->constructor('Smtt')

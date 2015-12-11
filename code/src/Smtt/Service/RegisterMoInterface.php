@@ -1,6 +1,6 @@
 <?php
 
-namespace Smtt\RegisterMo;
+namespace Smtt\Service;
 
 use Smtt\dto\MoRequest;
 

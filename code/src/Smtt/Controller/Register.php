@@ -2,7 +2,7 @@
 
 namespace Smtt\Controller;
 
-use Smtt\RegisterMo\RegisterMoInterface;
+use Smtt\Service\RegisterMoInterface;
 use Smtt\RequestProcessor;
 use Smtt\Traits\Logger;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +21,7 @@ class Register
 
     /**
      * Register contoller constructor.
-     * @param RegisterMoInterface $registerMo Strategy of RegisterMo processing
+     * @param RegisterMoInterface $registerMo Strategy of Service processing
      */
     public function __construct(RegisterMoInterface $registerMo)
     {
