@@ -39,7 +39,7 @@ bootstrapdb(){
       shortcodeid int,
       text varchar(255),
       auth_token varchar(60),
-      created_at DATETIME,
+      created_at NOT NULL DATETIME,
       PRIMARY KEY(id)
     ) ;
 EOF

@@ -7,11 +7,14 @@ return [
     'log.path'  => __DIR__.'/../log/smtt.log',
     'log.level' => Logger::WARNING,
 
-    'db.connection_url' => 'mysql::root@localhost:3306/samtt?charset=UTF-8',
+    'db.connection_url' => 'mysql://root@localhost:3306/samtt?charset=utf8',
 
     'queue.server'  => '127.0.0.1',
     'queue.port'    => 4730,
     'queue.name'    => 'smtt_register_mo',
+
+    \Smtt\Queue\WorkerInterface::class => \DI\object(\Smtt\Queue\GearmanWorker::class)
+        ->method('addServer', \DI\get('queue.server'), \DI\get('queue.port')),
 
     \Smtt\Queue\QueueInterface::class => \DI\object(\Smtt\Queue\GearmanQueue::class)
         ->method('addServer', \DI\get('queue.server'), \DI\get('queue.port')),

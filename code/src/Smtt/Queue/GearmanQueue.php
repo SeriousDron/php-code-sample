@@ -16,6 +16,11 @@ class GearmanQueue implements QueueInterface
         $this->client = new \GearmanClient();
     }
 
+    /**
+     * Add gearman server to connection pool
+     * @param string $host
+     * @param int $port
+     */
     public function addServer($host = '127.0.0.1', $port = 4730)
     {
         $this->client->addServer($host, $port);
@@ -26,16 +31,17 @@ class GearmanQueue implements QueueInterface
      *
      * @param string $queue
      * @param mixed $workload
-     * @return string undencoded worker call result
+     * @return mixed worker call result
      * @throws ProcessingException
      */
     public function rpc($queue, $workload)
     {
         $result = $this->client->doNormal($queue, serialize($workload));
         $returnCode = $this->client->returnCode();
-        if ($returnCode !== GEARMAN_SUCCESS) {
+        if ($returnCode !== GEARMAN_SUCCESS || !is_string($result)) {
             throw new ProcessingException("Queue processing returned with result: {$result}", $returnCode);
         }
+        $result = unserialize($result);
         return $result;
     }
 }

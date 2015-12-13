@@ -60,7 +60,7 @@ class InstantRegister implements RegisterMoInterface
      */
     protected function isValidHash($hash)
     {
-        if (strlen($hash) != 24 || preg_match('#^[a-z0-9_]{24}$#iu', $hash) != 1) {
+        if (strlen($hash) != 24 || preg_match('#^[a-z0-9_\-]{24}$#iu', $hash) != 1) {
             return false;
         }
         return true;

@@ -10,3 +10,5 @@ $instantRegister = $container->get(InstantRegister::class);
 
 $worker = $container->get(WorkerInterface::class);
 $worker->addHandler($container->get('queue.name'), [$instantRegister, 'register']);
+
+while($worker->handle());

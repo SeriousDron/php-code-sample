@@ -28,8 +28,7 @@ class CommandRunner
      */
     public function run()
     {
-        $params = func_get_args();
-        array_walk($params, 'escapeshellarg');
+        $params = array_map('escapeshellarg', func_get_args());
         return shell_exec($this->command .' '. implode(' ', $params));
     }
 }
