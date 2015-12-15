@@ -6,7 +6,6 @@ installpkg(){
 }
 
 apt-get update
-installpkg gearman-job-server
 installpkg php5
 installpkg php5-apcu
 installpkg php5-mysql
@@ -14,6 +13,8 @@ installpkg php5-gearman
 installpkg mysql-server
 installpkg apache2-utils
 installpkg apache2-suexec-custom
+installpkg gearman-job-server
+installpkg gearman-tools
 
 echo "ServerName localhost" > /etc/apache2/conf-enabled/servername.conf
 a2enmod suexec
@@ -26,6 +27,7 @@ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 cd code
 composer.phar --no-dev install
 composer.phar dumpautoload -o
+cd ..
 
 bootstrapdb(){
     cat <<EOF | mysql -uroot
@@ -39,18 +41,22 @@ bootstrapdb(){
       shortcodeid int,
       text varchar(255),
       auth_token varchar(60),
-      created_at NOT NULL DATETIME,
+      created_at DATETIME NOT NULL,
       PRIMARY KEY(id)
     ) ;
 EOF
 }
 bootstrapdb
 
+echo 'Db created!'
+
 chmod a+x /tmp/populate_db
 populate_db() {
     /tmp/populate_db 10000000| mysql -u root samtt
 }
 populate_db
+
+echo 'Db populated!'
 
 createIndex() {
     echo 'CREATE INDEX `idx_created` ON `mo` (`created_at` ASC)'| mysql -u root samtt
