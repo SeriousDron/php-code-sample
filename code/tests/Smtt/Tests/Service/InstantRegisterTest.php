@@ -4,6 +4,7 @@ namespace Smtt\Tests\Service;
 
 use Doctrine\DBAL\Connection;
 use Smtt\dto\MoRequest;
+use Smtt\dto\RegisterResult;
 use Smtt\Service\CommandRunner;
 use Smtt\Service\InstantRegister;
 
@@ -27,7 +28,8 @@ class InstantRegisterTest extends \PHPUnit_Framework_TestCase
 
         $instantRegister = new InstantRegister($runner, $dbMock);
         $result = $instantRegister->register($moRequest);
-        $this->assertTrue($result);
+        $this->assertInstanceOf(RegisterResult::class, $result);
+        $this->assertTrue($result->successful);
     }
 
     public function testBadHash()
@@ -44,6 +46,8 @@ class InstantRegisterTest extends \PHPUnit_Framework_TestCase
         $runner->method('run')->willReturn('');
         $instantRegister = new InstantRegister($runner, $dbMock);
         $result = $instantRegister->register($moRequest);
-        $this->assertFalse($result);
+        $this->assertInstanceOf(RegisterResult::class, $result);
+        $this->assertFalse($result->successful);
+        $this->assertNotEmpty($result->message);
     }
 }

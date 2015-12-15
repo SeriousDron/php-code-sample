@@ -5,6 +5,7 @@ namespace Smtt\Service;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Smtt\dto\MoRequest;
+use Smtt\dto\RegisterResult;
 
 class InstantRegister implements RegisterMoInterface
 {
@@ -29,7 +30,7 @@ class InstantRegister implements RegisterMoInterface
      * Register Mo request through command runned. Check result and save hash to DB
      *
      * @param MoRequest $moRequest
-     * @return boolean
+     * @return RegisterResult
      * @throws DBALException
      */
     public function register(MoRequest $moRequest)
@@ -37,7 +38,7 @@ class InstantRegister implements RegisterMoInterface
         $hash = $this->runner->run(json_encode($moRequest));
 
         if (!$this->isValidHash($hash)) {
-            return false;
+            return RegisterResult::fail('Invalid register mo result');
         }
 
         $this->dbConnection->insert('mo', array(
@@ -49,7 +50,7 @@ class InstantRegister implements RegisterMoInterface
             'created_at' => null,
         ));
 
-        return true;
+        return RegisterResult::success();
     }
 
     /**

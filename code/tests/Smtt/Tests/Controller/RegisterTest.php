@@ -4,7 +4,8 @@ namespace Smtt\Tests\Controller;
 
 use Psr\Log\LoggerInterface;
 use Smtt\Controller\Register;
-use Smtt\Service\InstantRegister;
+use Smtt\dto\RegisterResult;
+use Smtt\Service\RegisterMoInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -32,8 +33,7 @@ class RegisterTest extends \PHPUnit_Framework_TestCase
 
     public function testException()
     {
-        $registerMo = $this->getMockBuilder(InstantRegister::class)
-            ->disableOriginalConstructor()->getMock();
+        $registerMo = $this->getMock(RegisterMoInterface::class);
         $registerMo->expects($this->once())
             ->method('register')
             ->willThrowException(new \Exception('Test'));
@@ -45,18 +45,24 @@ class RegisterTest extends \PHPUnit_Framework_TestCase
             'text'          => 'ON EDUCATION',
         ));
 
-        $logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
-        $logger->expects($this->once())
-            ->method('error');
+        $this->expectFailure($registerMo, $request);
+    }
 
-        $controller = new Register($registerMo);
-        $controller->setLogger($logger);
+    public function testFailedProcessing()
+    {
+        $registerMo = $this->getMock(RegisterMoInterface::class);
+        $registerMo->expects($this->once())
+            ->method('register')
+            ->willReturn(RegisterResult::fail('Test failure'));
 
-        /** @var JsonResponse $response */
-        $response = $controller($request);
+        $request = new Request(array(
+            'msisdn'        => 992623,
+            'operatorid'    => 1,
+            'shortcodeid'   => 99999,
+            'text'          => 'ON TEST',
+        ));
 
-        $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->expectFailure($registerMo, $request);
     }
 
     public function testBadRequest()
@@ -76,11 +82,30 @@ class RegisterTest extends \PHPUnit_Framework_TestCase
      */
     protected function buildSuccessRegisterMock()
     {
-        $registerMo = $this->getMockBuilder(InstantRegister::class)
-            ->disableOriginalConstructor()->getMock();
+        $registerMo = $this->getMock(RegisterMoInterface::class);
         $registerMo->expects($this->any())
             ->method('register')
-            ->willReturn(true);
+            ->willReturn(RegisterResult::success());
         return $registerMo;
+    }
+
+    /**
+     * @param $registerMo
+     * @param $request
+     */
+    protected function expectFailure($registerMo, $request)
+    {
+        $logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
+        $logger->expects($this->once())
+            ->method('error');
+
+        $controller = new Register($registerMo);
+        $controller->setLogger($logger);
+
+        /** @var JsonResponse $response */
+        $response = $controller($request);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(500, $response->getStatusCode());
     }
 }

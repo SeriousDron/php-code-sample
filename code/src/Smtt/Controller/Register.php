@@ -2,6 +2,7 @@
 
 namespace Smtt\Controller;
 
+use Smtt\Exception\ProcessingException;
 use Smtt\Service\RegisterMoInterface;
 use Smtt\RequestProcessor;
 use Smtt\Traits\Logger;
@@ -39,9 +40,17 @@ class Register
         $response = new JsonResponse();
         try {
             $moRequest = $this->requestProcessor->process($request);
-            $this->registerMo->register($moRequest);
+            $result = $this->registerMo->register($moRequest);
+            if (!$result->successful) {
+                throw new ProcessingException($result->message);
+            }
             $response->setData(['status' => 'ok']);
         } catch (\Smtt\Exception\Exception $e) {
+            if ($e->getCode() == 500) {
+                $this->logger->error('Exception during mo register', [
+                    'exception' => $e->__toString(),
+                ]);
+            }
             $response->setStatusCode($e->getCode());
             $response->setData([
                 'status'    => 'error',

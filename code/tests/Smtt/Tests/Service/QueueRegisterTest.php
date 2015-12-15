@@ -4,6 +4,7 @@ namespace Smtt\Tests\Service;
 
 use Psr\Log\LoggerInterface;
 use Smtt\dto\MoRequest;
+use Smtt\dto\RegisterResult;
 use Smtt\Exception\ProcessingException;
 use Smtt\Queue\GearmanQueue;
 use Smtt\Service\QueueRegister;
@@ -16,13 +17,15 @@ class QueueRegisterTest extends \PHPUnit_Framework_TestCase
             . 's:10:"operatorid";i:3;s:11:"shortcodeid";i:8;s:4:"text";s:8:"ON GAMES";}');
 
         $queue = $this->getMockBuilder(GearmanQueue::class)->disableOriginalConstructor()->getMock();
-        $queue->expects($this->once())->method('rpc')->with('test_queue', $moRequest)->willReturn(true);
+        $queue->expects($this->once())
+            ->method('rpc')->with('test_queue', $moRequest)->willReturn(RegisterResult::success());
 
         $queueRegister = new QueueRegister($queue);
         $queueRegister->setQueue('test_queue');
 
         $result = $queueRegister->register($moRequest);
-        $this->assertTrue($result);
+        $this->assertInstanceOf(RegisterResult::class, $result);
+        $this->assertTrue($result->successful);
     }
 
     public function testFailedProcessing()
@@ -34,7 +37,8 @@ class QueueRegisterTest extends \PHPUnit_Framework_TestCase
 
         $queueRegister = new QueueRegister($queue);
         $result = $queueRegister->register($moRequest);
-        $this->assertFalse($result);
+        $this->assertInstanceOf(RegisterResult::class, $result);
+        $this->assertFalse($result->successful);
     }
 
     public function testProcessingException()
@@ -51,6 +55,7 @@ class QueueRegisterTest extends \PHPUnit_Framework_TestCase
         $queueRegister = new QueueRegister($queue);
         $queueRegister->setLogger($logger);
         $result = $queueRegister->register($moRequest);
-        $this->assertFalse($result);
+        $this->assertInstanceOf(RegisterResult::class, $result);
+        $this->assertFalse($result->successful);
     }
 }

@@ -38,8 +38,8 @@ class GearmanQueue implements QueueInterface
     {
         $result = $this->client->doNormal($queue, serialize($workload));
         $returnCode = $this->client->returnCode();
-        if ($returnCode !== GEARMAN_SUCCESS || !is_string($result)) {
-            throw new ProcessingException("Queue processing returned with result: {$result}", $returnCode);
+        if ($returnCode !== GEARMAN_SUCCESS || !is_string($result) || $result == '') {
+            throw new ProcessingException("Queue processing returned with result: {$result}");
         }
         $result = unserialize($result);
         return $result;

@@ -3,6 +3,7 @@
 namespace Smtt\Service;
 
 use Smtt\dto\MoRequest;
+use Smtt\dto\RegisterResult;
 use Smtt\Exception\ProcessingException;
 use Smtt\Queue\QueueInterface;
 use Smtt\Traits\Logger;
@@ -37,19 +38,19 @@ class QueueRegister implements RegisterMoInterface
 
     /**
      * @param MoRequest $moRequest
-     * @return boolean
+     * @return RegisterResult
      */
     public function register(MoRequest $moRequest)
     {
         try {
             $result = $this->queueServer->rpc($this->queue, $moRequest);
-            if (!is_bool($result)) {
-                throw new ProcessingException('Unexpected result type');
+            if (!$result instanceof RegisterResult) {
+                return RegisterResult::fail('Unexpected result type');
             }
             return $result;
         } catch (ProcessingException $e) {
             $this->logger->error('Unexpected exception processing task', ['exception' => $e]);
-            return false;
+            return RegisterResult::fail($e->getMessage());
         }
     }
 }
