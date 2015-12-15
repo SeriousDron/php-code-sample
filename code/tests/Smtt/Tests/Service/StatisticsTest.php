@@ -3,7 +3,6 @@
 namespace Smtt\Tests\Service;
 
 use Doctrine\DBAL\Connection;
-use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Smtt\Exception\QueryException;
 use Doctrine\DBAL\Statement;
@@ -45,7 +44,9 @@ class StatisticsTest extends \PHPUnit_Framework_TestCase
     public function testDates()
     {
         $stmt = $this->getMockBuilder(Statement::class)->disableOriginalConstructor()->getMock();
-        $stmt->expects($this->once())->method('fetch')->willReturn(['minDate' => '2011-06-17 21:45:07', 'maxDate' => '2015-12-13 04:37:51']);
+        $stmt->expects($this->once())->method('fetch')->willReturn([
+            'minDate' => '2011-06-17 21:45:07',
+            'maxDate' => '2015-12-13 04:37:51']);
 
         $dbMock = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
         $dbMock->expects($this->once())->method('prepare')->willReturn($stmt);

@@ -2,7 +2,7 @@
 
 namespace Smtt\Tests\Service;
 
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Smtt\dto\MoRequest;
 use Smtt\Exception\ProcessingException;
 use Smtt\Queue\GearmanQueue;
@@ -44,7 +44,7 @@ class QueueRegisterTest extends \PHPUnit_Framework_TestCase
         $queue = $this->getMockBuilder(GearmanQueue::class)->disableOriginalConstructor()->getMock();
         $queue->expects($this->any())->method('rpc')->willThrowException(new ProcessingException('Test exception'));
 
-        $logger = $this->getMockBuilder(Logger::class)->disableOriginalConstructor()->getMock();
+        $logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
         $logger->expects($this->once())
             ->method('error');
 

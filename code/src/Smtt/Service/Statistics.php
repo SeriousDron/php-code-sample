@@ -27,26 +27,31 @@ class Statistics
 
     /**
      * Get Mo count created in last 15 minutes
-     * @return mixed
-     * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return int
+     * @throws QueryException
      */
     public function getMoCountLast15m()
     {
         try {
-            $stmt = $this->connection->query('SELECT count(*) as `count` FROM `mo` WHERE `created_at` > NOW() - INTERVAL 15 MINUTE');
+            $stmt = $this->connection->query('
+              SELECT count(*) as `count`
+              FROM `mo`
+              WHERE `created_at` > NOW() - INTERVAL 15 MINUTE');
             $data = $stmt->fetch();
         } catch (DBALException $e) {
             $this->logger->error('Error fetching mo count', ['exception' => $e]);
-            throw new QueryException('Error fetching mo count', 500, $e);
+            throw new QueryException('Error fetching mo count', $e);
         }
         return $data['count'];
     }
 
     /**
      * Get min and max dates for last N mo
+     *
      * @param int $lastMoCount
      * @return MoDates
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws QueryException
      */
     public function getDates4LastMo($lastMoCount = 10000)
     {
@@ -73,7 +78,7 @@ class Statistics
             return $result;
         } catch (DBALException $e) {
             $this->logger->error('Error querying mo time span', ['exception' => $e]);
-            throw new QueryException('Error querying mo time span', 500 ,$e);
+            throw new QueryException('Error querying mo time span', $e);
         }
     }
 }

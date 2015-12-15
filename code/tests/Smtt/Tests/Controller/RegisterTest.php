@@ -2,7 +2,7 @@
 
 namespace Smtt\Tests\Controller;
 
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Smtt\Controller\Register;
 use Smtt\Service\InstantRegister;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +45,7 @@ class RegisterTest extends \PHPUnit_Framework_TestCase
             'text'          => 'ON EDUCATION',
         ));
 
-        $logger = $this->getMockBuilder(Logger::class)->disableOriginalConstructor()->getMock();
+        $logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
         $logger->expects($this->once())
             ->method('error');
 
