@@ -24,4 +24,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "file", source: "populate_db", destination: "/tmp/populate_db"
   config.vm.provision "file", source: "workers.conf", destination: "/tmp/workers.conf"
   config.vm.provision "shell", path: "./provisioner"
+
+  #start apache and supervisor after mount
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    service apache2 restart
+    service supervisor restart
+SHELL
 end

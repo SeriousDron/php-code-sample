@@ -19,7 +19,7 @@ class CommandRunner
      */
     public function setCommand($command)
     {
-        $this->command = $command;
+        $this->command = realpath($command);
     }
 
     /**
