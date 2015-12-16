@@ -55,7 +55,7 @@ echo 'Db created!'
 
 chmod a+x /tmp/populate_db
 populate_db() {
-    /tmp/populate_db 10000000| mysql -u root samtt
+    php /tmp/populate_db 10000000| mysql -u root samtt
 }
 populate_db
 
