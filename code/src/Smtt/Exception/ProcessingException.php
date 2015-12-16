@@ -8,5 +8,4 @@ class ProcessingException extends \RuntimeException implements Exception
     {
         parent::__construct($message, 500, $previous);
     }
-
 }

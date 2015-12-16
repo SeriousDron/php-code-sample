@@ -15,6 +15,10 @@ installpkg apache2-utils
 installpkg apache2-suexec-custom
 installpkg gearman-job-server
 installpkg gearman-tools
+installpkg supervisor
+
+cp /tmp/workers.conf /etc/supervisor/conf.d/workers.conf
+supervisorctl reload
 
 echo "ServerName localhost" > /etc/apache2/conf-enabled/servername.conf
 a2enmod suexec
@@ -41,7 +45,7 @@ bootstrapdb(){
       shortcodeid int,
       text varchar(255),
       auth_token varchar(60),
-      created_at DATETIME NOT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY(id)
     ) ;
 EOF

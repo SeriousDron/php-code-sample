@@ -22,5 +22,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.vm.provision "file", source: "001-talented.conf", destination: "/tmp/001-talented.conf"
   config.vm.provision "file", source: "populate_db", destination: "/tmp/populate_db"
+  config.vm.provision "file", source: "workers.conf", destination: "/tmp/workers.conf"
   config.vm.provision "shell", path: "./provisioner"
 end

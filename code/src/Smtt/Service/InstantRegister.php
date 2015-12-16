@@ -6,9 +6,12 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Smtt\dto\MoRequest;
 use Smtt\dto\RegisterResult;
+use Smtt\Traits\Logger;
 
 class InstantRegister implements RegisterMoInterface
 {
+    use Logger;
+
     /** @var CommandRunner */
     protected $runner;
 
@@ -40,16 +43,25 @@ class InstantRegister implements RegisterMoInterface
         if (!$this->isValidHash($hash)) {
             return RegisterResult::fail('Invalid register mo result');
         }
-
-        $this->dbConnection->insert('mo', array(
-            'msisdn' => $moRequest->msisdn,
-            'operatorid' => $moRequest->operatorid,
-            'shortcodeid' => $moRequest->shortcodeid,
-            'text' => $moRequest->text,
-            'auth_token' => $hash,
-            'created_at' => null,
-        ));
-
+        try {
+            $this->dbConnection->insert(
+                'mo',
+                array(
+                    'msisdn' => $moRequest->msisdn,
+                    'operatorid' => $moRequest->operatorid,
+                    'shortcodeid' => $moRequest->shortcodeid,
+                    'text' => $moRequest->text,
+                    'auth_token' => $hash,
+                ),
+                array(
+                    'operatorid' => \PDO::PARAM_INT,
+                    'shortcodeid' => \PDO::PARAM_INT,
+                )
+            );
+        } catch (DBALException $e) {
+            $this->logger->error('DBAL exception occured', ['exception' => $e]);
+            return RegisterResult::fail('DBAL exception occured');
+        }
         return RegisterResult::success();
     }
 
