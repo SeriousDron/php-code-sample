@@ -5,6 +5,8 @@ installpkg(){
     dpkg-query --status $1 >/dev/null || apt-get install -y $1
 }
 
+chmod a+x /home/vagrant/code/bin/registermo
+
 apt-get update
 installpkg php5
 installpkg php5-apcu
