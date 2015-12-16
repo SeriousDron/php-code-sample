@@ -29,8 +29,7 @@ service apache2 restart
 
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 cd code
-composer.phar --no-dev install
-composer.phar dumpautoload -o
+composer.phar install --no-dev -o
 cd ..
 
 bootstrapdb(){

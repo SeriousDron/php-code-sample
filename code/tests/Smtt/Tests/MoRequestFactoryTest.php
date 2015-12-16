@@ -4,18 +4,18 @@ namespace Smtt\Tests;
 
 use Smtt\Exception\NotEnoughParametersException;
 use Smtt\Exception\UnexpectedValueException;
-use Smtt\RequestProcessor;
+use Smtt\MoRequestFactory;
 use Symfony\Component\HttpFoundation\Request;
 
-class RequestProcessorTest extends \PHPUnit_Framework_TestCase
+class MoRequestFactoryTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var RequestProcessor */
-    protected $requestProcessor;
+    /** @var MoRequestFactory */
+    protected $moRequestFactory;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->requestProcessor = new RequestProcessor();
+        $this->moRequestFactory = new MoRequestFactory();
     }
 
     public function testGetPostParams()
@@ -29,7 +29,7 @@ class RequestProcessorTest extends \PHPUnit_Framework_TestCase
 
         $requests = [new Request($data), new Request([], $data)];
         foreach ($requests as $request) {
-            $moRequest = $this->requestProcessor->process($request);
+            $moRequest = $this->moRequestFactory->createFromRequest($request);
 
             $this->assertInternalType('string', $moRequest->msisdn);
             $this->assertEquals($data['msisdn'], $moRequest->msisdn);
@@ -55,7 +55,7 @@ class RequestProcessorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(UnexpectedValueException::class);
-        $this->requestProcessor->process(new Request($data));
+        $this->moRequestFactory->createFromRequest(new Request($data));
     }
 
     public function testNonNumericOperatorId()
@@ -68,7 +68,7 @@ class RequestProcessorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(UnexpectedValueException::class);
-        $this->requestProcessor->process(new Request($data));
+        $this->moRequestFactory->createFromRequest(new Request($data));
     }
 
     public function testNonNumericShortCodeIs()
@@ -81,7 +81,7 @@ class RequestProcessorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(UnexpectedValueException::class);
-        $this->requestProcessor->process(new Request($data));
+        $this->moRequestFactory->createFromRequest(new Request($data));
     }
 
     /**
@@ -97,7 +97,7 @@ class RequestProcessorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(UnexpectedValueException::class);
-        $this->requestProcessor->process(new Request($data));
+        $this->moRequestFactory->createFromRequest(new Request($data));
     }
 
     public function testNoParameter()
@@ -108,6 +108,6 @@ class RequestProcessorTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(NotEnoughParametersException::class);
-        $this->requestProcessor->process(new Request($data));
+        $this->moRequestFactory->createFromRequest(new Request($data));
     }
 }

@@ -48,6 +48,9 @@ class RegisterTest extends \PHPUnit_Framework_TestCase
         $this->expectFailure($registerMo, $request);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function testFailedProcessing()
     {
         $registerMo = $this->getMock(RegisterMoInterface::class);
@@ -78,7 +81,7 @@ class RegisterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     protected function buildSuccessRegisterMock()
     {
@@ -90,6 +93,8 @@ class RegisterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Common method to check all necessary failure actions
+     *
      * @param $registerMo
      * @param $request
      */

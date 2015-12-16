@@ -7,7 +7,7 @@ use Smtt\Exception\NotEnoughParametersException;
 use Smtt\Exception\UnexpectedValueException;
 use Symfony\Component\HttpFoundation\Request;
 
-class RequestProcessor
+class MoRequestFactory
 {
     /**
      * Check request validity and create dto
@@ -17,7 +17,7 @@ class RequestProcessor
      * @throws UnexpectedValueException
      * @throws NotEnoughParametersException
      */
-    public function process(Request $request)
+    public function createFromRequest(Request $request)
     {
         $this->checkFieldsExists($request);
         $result = new MoRequest();

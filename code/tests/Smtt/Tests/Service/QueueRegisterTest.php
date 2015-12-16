@@ -11,6 +11,9 @@ use Smtt\Service\QueueRegister;
 
 class QueueRegisterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function testSuccessfulProcessing()
     {
         $moRequest = unserialize('O:18:"Smtt\dto\MoRequest":4:{s:6:"msisdn";s:11:"60123456789";'

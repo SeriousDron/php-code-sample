@@ -39,6 +39,7 @@ class QueueRegister implements RegisterMoInterface
     /**
      * @param MoRequest $moRequest
      * @return RegisterResult
+     * @SuppressWarnings(PHPMD.StaticAccess))
      */
     public function register(MoRequest $moRequest)
     {

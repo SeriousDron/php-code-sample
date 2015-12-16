@@ -35,6 +35,7 @@ class InstantRegister implements RegisterMoInterface
      * @param MoRequest $moRequest
      * @return RegisterResult
      * @throws DBALException
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function register(MoRequest $moRequest)
     {

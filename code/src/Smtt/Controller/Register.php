@@ -4,7 +4,7 @@ namespace Smtt\Controller;
 
 use Smtt\Exception\ProcessingException;
 use Smtt\Service\RegisterMoInterface;
-use Smtt\RequestProcessor;
+use Smtt\MoRequestFactory;
 use Smtt\Traits\Logger;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ class Register
     /** @var RegisterMoInterface */
     protected $registerMo;
 
-    /** @var RequestProcessor */
+    /** @var MoRequestFactory */
     protected $requestProcessor;
 
     /**
@@ -27,7 +27,7 @@ class Register
     public function __construct(RegisterMoInterface $registerMo)
     {
         $this->registerMo = $registerMo;
-        $this->requestProcessor = new RequestProcessor();
+        $this->requestProcessor = new MoRequestFactory();
     }
 
     /**
@@ -39,7 +39,7 @@ class Register
     {
         $response = new JsonResponse();
         try {
-            $moRequest = $this->requestProcessor->process($request);
+            $moRequest = $this->requestProcessor->createFromRequest($request);
             $result = $this->registerMo->register($moRequest);
             if (!$result->successful) {
                 throw new ProcessingException($result->message);
